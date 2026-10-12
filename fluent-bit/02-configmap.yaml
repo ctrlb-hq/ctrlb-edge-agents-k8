@@ -22,7 +22,7 @@ data:
         Match        kube.*
         Host         <INSTANCE_HOST>
         Port         8080
-        URI          /api/default/<STREAM_NAME>/_json_evolving
+        URI          /api/default/<STREAM_NAME>/v2/_json_evolving
         Format       json
         Json_Date_Key _timestamp
         Json_Date_Format epoch_ms
