@@ -33,21 +33,27 @@ data:
         detectors: [env, system, docker, kubernetes]
 
     exporters:
-      otlp:
-        endpoint: /api/default/<STREAM_NAME>/_otel
+      otlphttp/ctrlb-logs:
+        endpoint: https://<INSTANCE_HOST>/engine/api/default/<STREAM_NAME>/_otel
+        compression: gzip
         headers:
           Authorization: Basic <API_TOKEN>
-        tls:
-          insecure: false
+
+      otlphttp/ctrlb-traces:
+        endpoint: https://<INSTANCE_HOST>/engine/api/default
+        compression: gzip
+        headers:
+          stream-name: <STREAM_NAME>
+          Authorization: Basic <API_TOKEN>
 
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch, resource_detection]
-          exporters: [otlp]
+          exporters: [otlphttp/ctrlb-traces]
 
         logs:
           receivers: [otlp, filelog]
           processors: [memory_limiter, batch, resource_detection]
-          exporters: [otlp]
+          exporters: [otlphttp/ctrlb-logs]
